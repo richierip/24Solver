@@ -21,7 +21,7 @@ STARTING_NUMBERS = 4
 LEAVES = 0  # Dont' touch
 # Removes "duplicate" answers. Duplicates either have the same operations done but the order
 CLEAN_SOLUTIONS = True
-# reversed ( (1-2)+5 vs (1+5)-2 ), or the or the order reversed in the same operation (3*2 vs 2*3)
+# reversed ( (1-2)+5 vs (1+5)-2 ), or the order reversed in the same operation (3*2 vs 2*3)
 
 ''' Node class for each number in the tree. Keeps track of operations taken to get there, 
 as well as if it's a solution or not.    ex: 2 3 7 8    Level 0   __24__
@@ -159,9 +159,7 @@ def constructGraph(currentNode, numList):
             updatedList = copy.copy(numList)  # Don't mess with parent array
             updatedList.remove(num)
             constructGraph(child, updatedList)
-
     return None
-
 
 ''' Call the traversal function in the Node class. '''
 
@@ -184,7 +182,7 @@ def evaluateExpression(current, next, operand):
 
 
 ''' Finds and purges duplicate solutions. Though they have distinct paths to distinct leaves in the tree,
-        they are functionally identical mathmatical expressions. 
+        they are functionally identical mathematical expressions. 
         Additionally, shifting the contents of the array makes it easier to spot duplicates
         Input: [ [2, ( '+14', '*2','+3') ] , [second solution] , [etc...] ]
         New format: [[('2', '+', '3'), ('5','*', '2'), ('10', '+', '14')], [second solution], [etc]]'''
@@ -242,12 +240,11 @@ def removeDuplicates(results):
         mfd = set(mfd)
         for index in sorted(mfd, reverse=True):
             del cleaned[index]
-
     return cleaned
 
 
 ''' Print the solutions to the terminal nicely. Didn't have to evaluate the expressions again really,
-        but it seemed easiet. 
+        but it seemed easiest. 
         Input: [[('2', '+', '3'), ('5','*', '2'), ('10', '+', '14')], [second solution], [etc]] '''
 
 def printResults(results):
@@ -265,7 +262,7 @@ def printResults(results):
             operand = line[1]
             evaluated = evaluateExpression(line[0], line[2], operand)
 
-            # Chop off the '.0' from floats but preserve meaningful digits without messing with the actualy variables.
+            # Chop off the '.0' from floats but preserve meaningful digits without messing with the actual variables.
             # This is the dumbest, most inefficient way to accomplish this ... but it works?
             pcurrent = current
             pevaluated = evaluated
@@ -289,25 +286,25 @@ def main():
     root = Node(f'{str(TARGET)}')  # TARGET set as 24 by default up top
 
     startTime = time.time()
-    print("\nCreating dynamic programming table ...")
+    print("\nConstructing tree ...")
     startConstruct = time.time()
     constructGraph(root, numList)
-    print(
-        f"Done. That took {round(time.time() - startConstruct, 5)} seconds.\n")
+    print( f"Done. That took {round(time.time() - startConstruct, 5)} seconds.\n")
+
     print("Searching tree for solutions ...")
     startSolutions = time.time()
     results = findSolutions(root)
-    print(
-        f"Done. That took {round(time.time() - startSolutions, 5)} seconds.\n")
+    print(f"Done. That took {round(time.time() - startSolutions, 5)} seconds.\n")
+
     print("Removing duplicate solutions ...")
     startClean = time.time()
     cleanedResults = removeDuplicates(results)
     print(f"Done. That took {round(time.time() - startClean, 5)} seconds.\n")
+
     print("Printing solutions ...\n")
     numberOfSolutions = printResults(cleanedResults)
     print(f"\nTask completed in {round(time.time() - startTime, 5)} seconds.")
     print(f"Out of {LEAVES} possible calculations, {numberOfSolutions}")
-
 
 if __name__ == '__main__':
     main()
